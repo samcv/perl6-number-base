@@ -1,7 +1,7 @@
 =head1 NAME
 Number::Base
 =head1 DESCRIPTION
-All of the number converting bases that nobody wants in Perl 6 code!
+All of the number number bases nobody wants in Rakudo Core!
 Supports bases -10 to 1 in addition to allowing you to use bases 2-36 which are
 in core.
 
