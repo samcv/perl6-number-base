@@ -1,4 +1,12 @@
+=head1 NAME
+Number::Base
+=head1 DESCRIPTION
+All of the number converting bases that nobody wants in Perl 6 code!
+Supports bases -10 to 1 in addition to allowing you to use bases 2-36 which are
+in core.
+
 use nqp;
+#| Converts an Int to the requested base. Currently supports base -10 to base 36
 sub to-base (Int:D $Int, Int:D $base) is export {
     return nqp::x('1', $Int) if $base == 1;
     if $base == -1 {
@@ -13,6 +21,8 @@ sub to-base (Int:D $Int, Int:D $base) is export {
         ...
     }
 }
+#| Converts a Str from the requested base to an Int. Currently supports base -10
+#| to base 36
 sub from-base (Str:D $Str, Int:D $radix) is export {
     my int $chars = nqp::chars($Str);
     if $radix == 1 {
@@ -31,6 +41,7 @@ sub from-base (Str:D $Str, Int:D $radix) is export {
             )
         }
     }
+    # Fast path for base -1
     elsif $radix == -1 {
         if $Str eq nqp::x('1', $chars) {
             return $chars %% 2 ?? 0 !! 1;
@@ -39,6 +50,7 @@ sub from-base (Str:D $Str, Int:D $radix) is export {
             die "Malformed base -1 string '$Str'";
         }
     }
+    # Standard path for bases -2 to -10
     elsif $radix <= -2 && $radix >= -10 {
         my $count = 0;
         my int $i = $chars;
@@ -52,4 +64,3 @@ sub from-base (Str:D $Str, Int:D $radix) is export {
         unless 2 <= $radix <= 36; # (0..9,"a".."z").elems == 36
     return $Str.parse-base($radix);
 }
-say from-base('9482', -10);
